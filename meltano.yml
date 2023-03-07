@@ -8,13 +8,11 @@ plugins:
   extractors:
   - name: "tap-quora"
     namespace: "tap_quora"
-    pip_url: -e .
+    executable: ./tap-googleads.sh
     capabilities:
     - state
-    - catalog
     - discover
     - about
-    - stream-maps
     settings:
     - name: client_id
       env_aliases:
