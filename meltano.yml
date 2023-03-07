@@ -17,32 +17,18 @@ plugins:
     - stream-maps
     settings:
     - name: client_id
-      env_aliases:
-      - QUORA_CLIENT_ID
       kind: hidden
     - name: client_secret
-      env_aliases:
-        - QUORA_CLIENT_SECRET
       kind: hidden
     - name: access_token
-      env_aliases:
-        - QUORA_ACCESS_TOKEN
       kind: hidden
     - name: refresh_token
-      env_aliases:
-        - QUORA_REFRESH_TOKEN
       kind: hidden
     - name: account_id
-      env_aliases:
-        - QUORA_ACCOUNT_ID
       kind: hidden
     - name: start_date
-      env_aliases:
-        - QUORA_START_DATE
       required: false
     - name: end_date
-      env_aliases:
-        - QUORA_END_DATE
       required: false
   loaders:
   - name: target-jsonl
