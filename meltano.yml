@@ -17,6 +17,8 @@ plugins:
     - stream-maps
     settings:
     - name: client_id
+      env_aliases:
+      - CLIENT_ID
       kind: hidden
     - name: client_secret
       kind: hidden
