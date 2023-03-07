@@ -11,8 +11,10 @@ plugins:
     executable: ./tap-googleads.sh
     capabilities:
     - state
+    - catalog
     - discover
     - about
+    - stream-maps
     settings:
     - name: client_id
       env_aliases:
