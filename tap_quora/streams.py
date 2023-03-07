@@ -61,6 +61,8 @@ class CampaignStream(BasicQuoraStream):
     def path(self):
         path = "/campaigns/{campaignId}"
         path = path + "?fields=campaignName,impressions,clicks,conversions,spend"
+        path = path + "&conversionTypes=Generic,AppInstall,Purchase,GenerateLead,CompleteRegistration,AddPaymentInfo," \
+                      "AddToCart,AddToWishlist,InitiateCheckout,Search"
         path = path + f"&startDate={self.start_date}"
         path = path + f"&endDate={self.end_date}"
         path = path + "&granularity=DAY"
@@ -77,14 +79,19 @@ class CampaignStream(BasicQuoraStream):
         th.Property("campaignName", th.StringType),
         th.Property("impressions", th.IntegerType),
         th.Property("clicks", th.IntegerType),
-        th.Property("conversions", th.IntegerType),
+        th.Property("conversions", th.ObjectType(
+            th.Property("Generic", th.IntegerType),
+            th.Property("AppInstall", th.IntegerType),
+            th.Property("Purchase", th.IntegerType),
+            th.Property("GenerateLead", th.IntegerType),
+            th.Property("CompleteRegistration", th.IntegerType),
+            th.Property("AddPaymentInfo", th.IntegerType),
+            th.Property("AddToCart", th.IntegerType),
+            th.Property("AddToWishlist", th.IntegerType),
+            th.Property("InitiateCheckout", th.IntegerType),
+            th.Property("Search", th.IntegerType),
+        )),
         th.Property("spend", th.IntegerType),
         th.Property("startDate", th.DateType),
         th.Property("endDate", th.DateType),
     ).to_dict()
-
-    def post_process(self, row: dict, context: dict | None = None) -> dict | None:
-        row['conversions'] = row["conversions"]["Generic"]
-        row["campaignId"] = context["campaignId"]
-        row["accountId"] = context["accountId"]
-        return row
