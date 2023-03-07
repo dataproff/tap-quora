@@ -37,8 +37,14 @@ class Tapquora(Tap):
         th.Property(
             "start_date",
             th.DateType,
-            required=True,
+            required=False,
             description="The date to start pulling data from",
+        ),
+        th.Property(
+            "end_date",
+            th.DateType,
+            required=False,
+            description="The date to stop pulling data from",
         ),
         th.Property(
             "access_token",
