@@ -42,23 +42,10 @@ class AccountStream(BasicQuoraStream):
         th.Property("endDate", th.DateType),
     ).to_dict()
 
-    def get_records(self, context: Optional[dict]) -> Iterable[Dict[str, Any]]:
-        """Return a generator of row-type dictionary objects.
-
-        Each row emitted should be a dictionary of property names to their values.
-
-        Args:
-            context: Stream partition or context dictionary.
-
-        Yields:
-            One item per (possibly processed) record in the API.
-        """
-
-        for campaign_row in self.request_records(context):
-            campaign_row = self.post_process(campaign_row, context)
-            campaign_row['startDate'] = f"{self.start_date}"
-            campaign_row['endDate'] = f"{self.end_date}"
-            yield campaign_row
+    def post_process(self, row: dict, context: dict | None = None) -> dict | None:
+        row['startDate'] = f"{self.start_date}"
+        row['endDate'] = f"{self.end_date}"
+        return row
 
     def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
         return {
@@ -73,7 +60,7 @@ class CampaignStream(BasicQuoraStream):
     @property
     def path(self):
         path = "/campaigns/{campaignId}"
-        path = path + "?fields=impressions,clicks,conversions,spend"
+        path = path + "?fields=campaignName,impressions,clicks,conversions,spend"
         path = path + f"&startDate={self.start_date}"
         path = path + f"&endDate={self.end_date}"
         path = path + "&granularity=DAY"
@@ -87,6 +74,7 @@ class CampaignStream(BasicQuoraStream):
     schema = th.PropertiesList(
         th.Property("accountId", th.IntegerType),
         th.Property("campaignId", th.IntegerType),
+        th.Property("campaignName", th.StringType),
         th.Property("impressions", th.IntegerType),
         th.Property("clicks", th.IntegerType),
         th.Property("conversions", th.IntegerType),
@@ -95,20 +83,8 @@ class CampaignStream(BasicQuoraStream):
         th.Property("endDate", th.DateType),
     ).to_dict()
 
-    def get_records(self, context: Optional[dict]) -> Iterable[Dict[str, Any]]:
-        """Return a generator of row-type dictionary objects.
-
-        Each row emitted should be a dictionary of property names to their values.
-
-        Args:
-            context: Stream partition or context dictionary.
-
-        Yields:
-            One item per (possibly processed) record in the API.
-        """
-        for day_row in self.request_records(context):
-            day_row = self.post_process(day_row, context)
-            day_row["conversions"] = day_row["conversions"]["Generic"]
-            day_row["campaignId"] = context["campaignId"]
-            day_row["accountId"] = context["accountId"]
-            yield day_row
+    def post_process(self, row: dict, context: dict | None = None) -> dict | None:
+        row['conversions'] = row["conversions"]["Generic"]
+        row["campaignId"] = context["campaignId"]
+        row["accountId"] = context["accountId"]
+        return row
