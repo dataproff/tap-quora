@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tap-quora"
-version = "0.0.1"
+version = "0.0.2"
 description = "`tap-quora` is a Singer tap for quora, built with the Meltano Singer SDK."
 readme = "README.md"
 authors = ["Andrey Shalitkin"]
